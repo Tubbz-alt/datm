@@ -50,12 +50,11 @@ def absolute_submodule_path(submodule, cur_dir=inspect.stack()[0][1]):
     full_path = base_path / Path(submodule)
     return str(full_path)
 
-_DIR_MODULE = Path(absolute_submodule_path("datm/"))
-_DIR_LOGS = _DIR_MODULE / "logs"
+_DIR_REPO = Path(absolute_submodule_path("datm/"))
+_DIR_LOGS = _DIR_REPO / "logs"
 
 def setup_logging(path_yaml=None, dir_logs=None, default_level=logging.INFO):
-    """
-    Sets up the logging module to make a properly configured logger.
+    """Sets up the logging module to make a properly configured logger.
 
     This will go into the ``logging.yaml`` file in the top level directory, and
     try to load the logging configuration. If it fails for any reason, it will
@@ -75,7 +74,7 @@ def setup_logging(path_yaml=None, dir_logs=None, default_level=logging.INFO):
     """
     # Get the yaml path
     if path_yaml is None:
-        path_yaml = _DIR_MODULE / "logging.yaml"
+        path_yaml = _DIR_REPO / "logging.yaml"
     # Make sure we are using Path objects
     else: 
         path_yaml = Path(path_yaml)
