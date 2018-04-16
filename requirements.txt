@@ -1,4 +1,5 @@
 versioneer
+pytest
 numpy
 matplotlib
 pyyaml
