@@ -33,6 +33,6 @@ project to your python path by running the ``setup.py`` file: ::
   $ python setup.py develop
 
 This will install the pcakage in development mode. To remove it, simply run the
-same command with an additional ``--uninstall``flag: ::
+same command with an additional ``--uninstall`` flag: ::
 
   $ python setup.py develop --uninstall
