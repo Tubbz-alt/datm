@@ -1,0 +1,5 @@
+versioneer
+numpy
+matplotlib
+pyyaml
+coloredlogs
