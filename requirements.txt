@@ -1,0 +1,6 @@
+versioneer
+pytest
+numpy
+matplotlib
+pyyaml
+coloredlogs
