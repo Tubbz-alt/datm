@@ -1,7 +1,7 @@
 #
 # Deterministic Arrival Time Monitor Dockerfile
 #
-FROM centos7
+FROM centos:7
 MAINTAINER Abdullah P Rashed Ahmed <apra@slac.stanford.edu>
 
 # Install yum packages
