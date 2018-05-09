@@ -29,6 +29,8 @@ print('npixels: data.shape[1] = ',data.shape[1]);
 fiberids = np.arange(data.shape[0],dtype=float);
 print(fiberids);
 
+ncols=int(10);
+
 freqs = np.zeros(data.shape,dtype=float);
 nfiles=1000;
 catindsout=np.zeros((0,6),dtype=float);
@@ -60,14 +62,36 @@ for filename in filenames:
 		dataBack = IFFT(dataFTfilt,axis=1);
 		dataOverBack = IFFT(dataFToverfilt,axis=1);
 		out = np.real(dataBack)*np.abs(dataOverBack);
-		maxs = np.argmax(out,axis=1);
-		mins = np.argmin(out,axis=1);
-		maxvals = np.max(out,axis=1);
-		minvals = np.min(out,axis=1);
+		#maxs = np.argmax(out,axis=1);
+		#mins = np.argmin(out,axis=1);
+		sortinds=np.argsort(out,axis=1);
+		#print(out.shape[0]);
+		maxs_f = np.zeros(out.shape[0],dtype=float);
+		mins_f = np.zeros(out.shape[0],dtype=float);
+		maxvals = np.zeros(out.shape[0],dtype=float);
+		minvals = np.zeros(out.shape[0],dtype=float);
+		for i in range(out.shape[0]):
+			maxvals[i] = np.sum(out[i,sortinds[i,-ncols:]]);
+			minvals[i] = np.sum(out[i,sortinds[i,:ncols]]);
+			if (np.abs(maxvals[i])+np.abs(minvals[i])) < 1:
+				maxvals[i] = 0;
+				minvals[i] = 0;
+				continue;
+			#print(out[i,sortinds[i,:3]],out[i,sortinds[i,-3:]]);
+			maxs_f[i] = np.average(sortinds[i,-ncols:],weights=out[i,sortinds[i,-ncols:]]);
+			mins_f[i] = np.average(sortinds[i,:ncols],weights=out[i,sortinds[i,:ncols]]);
+			#print(maxs_f[i],mins_f[i]);
+#### AHHHH I FUCKING HATE PYTHON !!!!!!!!!!!!
+		#sortinds=np.unravel_index(np.argsort(out,axis=1),out.shape);
+		#print(out[sortinds[:,-ncols:]]);
+		#for i in range(4)
+		#break;
+		#maxvals = np.max(out,axis=1);
+		#minvals = np.min(out,axis=1);
 		indsout[:,0] = int(delay) ; # in femtoseconds
 		indsout[:,1] = fiberids; 
-		indsout[:,2] = maxs;
-		indsout[:,3] = mins;
+		indsout[:,2] = maxs_f;
+		indsout[:,3] = mins_f;
 		indsout[:,4] = maxvals;
 		indsout[:,5] = minvals;
 		catindsout = np.row_stack((catindsout,indsout));

@@ -1,5 +1,18 @@
+gnuplot> quad(x)=a+b*(x-x0)+c*(x-x0)**2
+gnuplot> a=-1500
+gnuplot> x0=400
+gnuplot> rep
+gnuplot> fit quad(x) 'noetalon_1200_interference.out.allinds.out' u ($1<-500?$3:0./0):($2==f?$1:0.0/0):($5>2?$5:0./0) via a,b,c
+
+notice that for fiber f=0 we are restricting to derivative value at max ($5>2) , and the delay setting to be less than -500fs ($1<-500)
+The changes that seem to be needed by looking at the results, let's compute the centerofmass for each peak rather than simply the argmax index
+
+
 noetalon:
+
+
 fiber 0 maxs:
+
 resultant parameter values
 
 a               = -1580.19
