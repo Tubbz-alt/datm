@@ -1,0 +1,32 @@
+noetalon:
+fiber 0 maxs:
+resultant parameter values
+
+a               = -1580.19
+b               = -3.11143
+c               = 0.0015783
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 1606.5
+rel. change during last iteration : -1.80321e-07
+
+degrees of freedom    (FIT_NDF)                        : 311
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 2.2728
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.1656
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+
+a               = -1580.19         +/- 1.915        (0.1212%)
+b               = -3.11143         +/- 0.004401     (0.1414%)
+c               = 0.0015783        +/- 3.77e-05     (2.389%)
+
+
+correlation matrix of the fit parameters:
+
+               a      b      c      
+	       a               1.000 
+	       b              -0.459  1.000 
+	       c              -0.902  0.450  1.000 
+
+

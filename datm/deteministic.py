@@ -26,13 +26,13 @@ for filename in filenames:
 print('nfibers: data.shape[0] = ',data.shape[0]);
 print('npixels: data.shape[1] = ',data.shape[1]);
 
-fiberids = np.arange(data.shape[0],dtype=int);
+fiberids = np.arange(data.shape[0],dtype=float);
 print(fiberids);
 
 freqs = np.zeros(data.shape,dtype=float);
-nfiles=500;
-catindsout=np.zeros((0,4),dtype=int);
-indsout = np.zeros((data.shape[0],4),dtype=int);
+nfiles=1000;
+catindsout=np.zeros((0,6),dtype=float);
+indsout = np.zeros((data.shape[0],6),dtype=float);
 ntally=int(0);
 overwidth=.02/2.;# .01 for noetalon
 atwidth=.1/2.; # .1 for noetalon
@@ -40,7 +40,7 @@ for filename in filenames:
 	if ntally > nfiles:
 		break;
 	if fnmatch.fnmatch(filename, filebase+'*'):
-		print(filename);
+		#print(filename);
 		ntally +=1;
 		f = open(dirname+filename, 'r');
 		s = f.readline();
@@ -61,20 +61,22 @@ for filename in filenames:
 		dataOverBack = IFFT(dataFToverfilt,axis=1);
 		out = np.real(dataBack)*np.abs(dataOverBack);
 		maxs = np.argmax(out,axis=1);
-#mins = np.argmin(out[:,maxs+10:],axis=1);
-#mins += maxs+10;
 		mins = np.argmin(out,axis=1);
-		indsout[:,0] = int(delay*1e3) ; # in attoseconds
+		maxvals = np.max(out,axis=1);
+		minvals = np.min(out,axis=1);
+		indsout[:,0] = int(delay) ; # in femtoseconds
 		indsout[:,1] = fiberids; 
 		indsout[:,2] = maxs;
 		indsout[:,3] = mins;
+		indsout[:,4] = maxvals;
+		indsout[:,5] = minvals;
 		catindsout = np.row_stack((catindsout,indsout));
 
 
-		#np.savetxt(procdir+filename+'.fftabs',dataFTabs,fmt='%f.3e');
-		np.savetxt(procdir+filename+'.back',out,fmt='%f.3e');
-		if (ntally%10==0):
-			np.savetxt(procdir+'allinds.out',catindsout,fmt='%i');
+		#np.savetxt(procdir+filename+'.fftabs',dataFTabs,fmt='%.3e');
+		if (ntally%50==0):
+			np.savetxt(procdir+filename+'.back',out,fmt='%.3e');
+			np.savetxt(procdir+filebase+'allinds.out',catindsout,fmt='%.3f');
 
-np.savetxt(procdir+'allinds.out',catindsout,fmt='%i');
+np.savetxt(procdir+filebase+'allinds.out',catindsout,fmt='%.3f');
 
