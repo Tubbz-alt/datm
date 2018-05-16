@@ -7,6 +7,7 @@ from numpy.fft import fftfreq as FREQS;
 from os import listdir;
 from os.path import isfile, join;
 import fnmatch;
+import pdb as debug;
 
 def gauss(x,x0,w):
 	return np.exp(-1*np.power((x-x0)/w,int(2)));
@@ -15,7 +16,8 @@ dirname = '/data/raw/';
 procdir = '/datm/data/processed/';
 filenames = [f for f in listdir(dirname) if isfile(join(dirname, f)) ];
 print(len(filenames));
-filebase = 'noetalon_1200_interference.out.'
+filebase = 'uint12_617_interference.out.'
+#filebase = 'noetalon_1200_interference.out.'
 #filebase = 'nfibers109_617_interference.out.'
 #/data/raw/nfibers109_617_interference.out.9990
 for filename in filenames:
@@ -33,8 +35,8 @@ ncols=int(10);
 
 freqs = np.zeros(data.shape,dtype=float);
 nfiles=1000;
-catindsout=np.zeros((0,6),dtype=float);
-indsout = np.zeros((data.shape[0],6),dtype=float);
+catindsout=np.zeros((0,7),dtype=float);
+indsout = np.zeros((data.shape[0],7),dtype=float);
 ntally=int(0);
 overwidth=.02/2.;# .01 for noetalon
 atwidth=.1/2.; # .1 for noetalon
@@ -47,6 +49,8 @@ for filename in filenames:
 		f = open(dirname+filename, 'r');
 		s = f.readline();
 		string,val = [splits for splits in s.split("\t") if splits is not ""];
+		listofstrings = [strings for strings in filename.split(".") if strings is not ""];
+		imagenum = listofstrings[-1];
 		delay = float(val);
 		data = np.loadtxt(dirname+filename,dtype=float);
 		dataFT=FFT(data,axis=1);
@@ -78,8 +82,8 @@ for filename in filenames:
 				minvals[i] = 0;
 				continue;
 			#print(out[i,sortinds[i,:3]],out[i,sortinds[i,-3:]]);
-			maxs_f[i] = np.average(sortinds[i,-ncols:],weights=out[i,sortinds[i,-ncols:]]);
-			mins_f[i] = np.average(sortinds[i,:ncols],weights=out[i,sortinds[i,:ncols]]);
+			maxs_f[i] = np.average(sortinds[i,-ncols:],weights=np.abs(out[i,sortinds[i,-ncols:]]));
+			mins_f[i] = np.average(sortinds[i,:ncols],weights=np.abs(out[i,sortinds[i,:ncols]]));
 			#print(maxs_f[i],mins_f[i]);
 #### AHHHH I FUCKING HATE PYTHON !!!!!!!!!!!!
 		#sortinds=np.unravel_index(np.argsort(out,axis=1),out.shape);
@@ -89,11 +93,13 @@ for filename in filenames:
 		#maxvals = np.max(out,axis=1);
 		#minvals = np.min(out,axis=1);
 		indsout[:,0] = int(delay) ; # in femtoseconds
-		indsout[:,1] = fiberids; 
-		indsout[:,2] = maxs_f;
-		indsout[:,3] = mins_f;
-		indsout[:,4] = maxvals;
-		indsout[:,5] = minvals;
+		#debug.set_trace();
+		indsout[:,1] = int(imagenum) ; 
+		indsout[:,2] = fiberids; 
+		indsout[:,3] = maxs_f;
+		indsout[:,4] = mins_f;
+		indsout[:,5] = maxvals;
+		indsout[:,6] = minvals;
 		catindsout = np.row_stack((catindsout,indsout));
 
 
