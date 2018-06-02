@@ -12,6 +12,18 @@ import pdb as debug;
 def gauss(x,x0,w):
 	return np.exp(-1*np.power((x-x0)/w,int(2)));
 
+def courseTime(x):
+	sz = x.shape[1];
+	filter = list( gauss(np.arange(sz),sz//2,sz//8)) * x.shape[0];
+	filter = np.roll(sz//2,axis=1);
+	filterFT = FFT(filter,axis=1);
+	xFT = FFT(x,axis=1);
+	yFT = xFT*filterFT;
+	y = IFFT(yFT,axis=1);
+	i = argmax(y,axis=1);
+	return (i,y);
+
+
 dirname = '/data/raw/';
 procdir = '/datm/data/processed/';
 filenames = [f for f in listdir(dirname) if isfile(join(dirname, f)) ];
@@ -53,6 +65,8 @@ for filename in filenames:
 		imagenum = listofstrings[-1];
 		delay = float(val);
 		data = np.loadtxt(dirname+filename,dtype=float);
+		coarseinds,coarseconv = courseTime(np.copy(data));
+		print(coarseinds[:10]);
 		dataFT=FFT(data,axis=1);
 		#dataFTabs=np.abs(dataFT);
 		dataFTfilt = np.zeros(dataFT.shape,dtype=complex);
