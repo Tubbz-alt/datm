@@ -1,11 +1,14 @@
 #
 # Deterministic Arrival Time Monitor Dockerfile
 #
-FROM centos:7
-MAINTAINER Abdullah P Rashed Ahmed <apra@slac.stanford.edu>
+FROM centos7
+FROM devtools7
+MAINTAINER Abdullah P Rashed Ahmed <apra@slac.stanford.edu>, Ryan N Coffee <coffee@slac.stanford.edu>
 
 # Install yum packages
 RUN yum clean all && yum -y install bzip2.x86_64 libgomp.x86_64 telnet.x86_64 gcc-c++ strace curl
+RUN yum -y install vim
+RUN yum -y install bc
 
 # Install Miniconda2 and add it to the path
 RUN curl -sSL https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -o /tmp/miniconda.sh
@@ -29,3 +32,7 @@ RUN conda install --yes --channel conda-forge ipython ipdb
 
 # Clean up
 RUN conda clean --all --yes
+
+RUN git config --global user.email "coffee@slac.stanford.edu"
+RUN git config --global user.name "ryancoffee"
+
